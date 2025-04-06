@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
+use Carbon\Carbon;
 use App\Models\Transaksi;
+use App\Models\Barang;
 use App\Models\DetailTransaksi;
+use DB;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
@@ -13,8 +17,10 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        $transaksi = Transaksi::all();  // Mengambil semua data transaksi
-        return view('admin.transaksi.index', compact('transaksi'));
+        $transaksi = Transaksi::all(); // Mengambil semua data transaksi
+        $barang = Barang::all();
+
+        return view('admin.transaksi.index', compact('transaksi', 'barang'));
     }
 
     /**
@@ -22,7 +28,9 @@ class TransaksiController extends Controller
      */
     public function create()
     {
-        return view('admin.transaksi.create');
+        $barang = Barang::all();
+        // dd($barang);
+        return view('admin.transaksi.create', compact('barang'));
     }
 
     /**
@@ -31,19 +39,53 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nama' => 'required',
             'tanggal' => 'required',
             'jenis' => 'required',
             'total' => 'required',
+            'barang' => 'required|array',
+            'jumlah' => 'required|array',
         ]);
 
-        // Simpan data transaksi baru
+        foreach ($request->barang as $key => $barang_id) {
+            $barang = Barang::find($barang_id);
+            if (!$barang) {
+                return back()->withErrors(['barang' => 'Barang tidak ditemukan']);
+            }
+
+            if ($request->jumlah[$key] > $barang->stok) {
+                return back()->withErrors(['jumlah' => "Jumlah barang $barang->nama melebihi stok yang tersedia"]);
+            }
+        }
+
+        // Simpan transaksi utama
         $transaksi = new Transaksi();
+        $transaksi->nama = $request->nama;
         $transaksi->tanggal = $request->tanggal;
         $transaksi->jenis = $request->jenis;
         $transaksi->total = $request->total;
         $transaksi->save();
 
-        // Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+        // Simpan detail transaksi
+        foreach ($request->barang as $key => $barang_id) {
+            $barang = Barang::find($barang_id);
+
+            // Simpan detail transaksi ke dalam tabel detail_transaksis
+            DB::table('barang_transaksi')->insert([
+                'transaksi_id' => $transaksi->id,
+                'barang_id' => $barang->id,
+                'jumlah' => $request->jumlah[$key],
+                'subtotal' => $request->jumlah[$key] * $barang->harga_jual,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Kurangi stok barang
+            $barang->stok -= $request->jumlah[$key];
+            $barang->save();
+        }
+
+        Alert::success('Success', 'Data Berhasil Ditambahkan')->autoClose(1000);
         return redirect()->route('transaksi.index');
     }
 
@@ -52,7 +94,11 @@ class TransaksiController extends Controller
      */
     public function show($id)
     {
-       //
+        // Ambil transaksi berdasarkan ID dan relasi barangs
+        $transaksi = Transaksi::with('barangs')->findOrFail($id);
+
+        // Kirim data transaksi beserta barang yang terkait
+        return view('admin.transaksi.show', compact('transaksi'));
     }
 
     /**
@@ -60,28 +106,42 @@ class TransaksiController extends Controller
      */
     public function edit($id)
     {
-        $transaksi = Transaksi::findOrFail($id);
-        return view('admin.transaksi.edit', compact('transaksi'));
+        $transaksi = Transaksi::with('barangs')->findOrFail($id);
+        $barang = Barang::all(); // Ambil semua barang
+        return view('admin.transaksi.edit', compact('transaksi', 'barang'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
+            'nama' => 'required',
             'tanggal' => 'required',
             'jenis' => 'required',
             'total' => 'required',
+            'barang' => 'required|array',
+            'jumlah' => 'required|array',
         ]);
 
         $transaksi = Transaksi::findOrFail($id);
+        $transaksi->nama = $request->nama;
         $transaksi->tanggal = $request->tanggal;
         $transaksi->jenis = $request->jenis;
         $transaksi->total = $request->total;
         $transaksi->save();
 
-        // Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        // Hapus detail transaksi lama
+        $transaksi->barangs()->detach();
+
+        // Simpan transaksi baru
+        foreach ($request->barang as $key => $barang_id) {
+            $barang = Barang::find($barang_id);
+            $transaksi->barangs()->attach($barang_id, [
+                'jumlah' => $request->jumlah[$key],
+                'subtotal' => $request->jumlah[$key] * $barang->harga_jual,
+            ]);
+        }
+
+        Alert::success('Success', 'Data Berhasil Diubah')->autoClose(1000);
         return redirect()->route('transaksi.index');
     }
 
@@ -91,9 +151,14 @@ class TransaksiController extends Controller
     public function destroy($id)
     {
         $transaksi = Transaksi::findOrFail($id);
+
+        // Hapus detail transaksi di tabel barang_transaksi
+        $transaksi->barangs()->detach();
+
+        // Hapus transaksi utama
         $transaksi->delete();
 
-        // Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::success('Success', 'Data Berhasil Dihapus')->autoClose(1000);
         return redirect()->route('transaksi.index');
     }
 }

@@ -15,15 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_kategori');
             $table->unsignedBigInteger('id_pembelian');
-            $table->string('nama_barang');
-            $table->integer('harga_beli');
+            $table->string('kode_barang');
             $table->integer('harga_jual');
             $table->integer('stok');
             $table->string('unit');
             $table->foreign('id_kategori')->references('id')->on('kategoris')->onDelete('cascade');
             $table->foreign('id_pembelian')->references('id')->on('pembelians')->onDelete('cascade');
-
-
 
             $table->timestamps();
         });

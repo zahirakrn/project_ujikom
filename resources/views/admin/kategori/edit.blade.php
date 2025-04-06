@@ -1,10 +1,20 @@
 @extends('layouts.backend.template')
 @section('content')
-    <div class="content-page">
+<div class="content-page">
         <div class="content">
-            <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Tabel /</span> Edit Kategori
-            </h4>
+            <div class="container-fluid">
+                <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-18 fw-semibold m-0"> Tabel Kategori</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Tabel</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('kategori.index') }}">Kategori</a></li>
+                            <li class="breadcrumb-item active">Edit Kategori</li>
+                        </ol>
+                    </div>
+                </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -22,14 +32,12 @@
                                 </div>
                                 <div class="row-content-end">
                                     <div class="col-sm-10">
-                                        <a href="{{ route('kategori.index') }} " class="btn btn-primary">Back</a>
-                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <a href="{{ route('kategori.index') }} " class="btn btn-outline-danger">Kembali</a>
+                                        <button type="submit" class="btn btn-outline-primary">Simpan</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
-
-
                     </div>
                 </div>
             </div>

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
+use Carbon\Carbon;
 use App\Models\Penggajian;
 use Illuminate\Http\Request;
+
 
 class PenggajianController extends Controller
 {
@@ -37,6 +40,9 @@ class PenggajianController extends Controller
             'kontak' => 'required',
         ]);
 
+        $tanggal_gaji = Carbon::parse($request->tanggal_gaji)->format('d F Y');
+
+
         // Simpan data penggajian baru
         $penggajian = new Penggajian();
         $penggajian->nama_pegawai = $request->nama_pegawai;
@@ -47,6 +53,7 @@ class PenggajianController extends Controller
         $penggajian->save();
 
         // Redirect ke halaman index setelah menyimpan
+        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
         return redirect()->route('penggajian.index');
     }
 
@@ -81,6 +88,9 @@ class PenggajianController extends Controller
             'kontak' => 'required',
         ]);
 
+        $tanggal_gaji = Carbon::parse($request->tanggal_gaji)->format('d F Y');
+
+
         $penggajian = Penggajian::findOrFail($id);
         $penggajian->nama_pegawai = $request->nama_pegawai;
         $penggajian->jumlah_gaji = $request->jumlah_gaji;
@@ -90,6 +100,7 @@ class PenggajianController extends Controller
         $penggajian->save();
 
         // Redirect ke halaman index setelah update
+        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
         return redirect()->route('penggajian.index');
     }
 
@@ -102,6 +113,7 @@ class PenggajianController extends Controller
         $penggajian->delete();
 
         // Redirect ke halaman index setelah menghapus
+        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('penggajian.index');
     }
 }

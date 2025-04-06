@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Models\kategori;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,7 @@ class KategoriController extends Controller
         $kategori->nama= $request->nama;
         $kategori->save();
 
-        // Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
         return redirect()->route('kategori.index');
 
     }
@@ -74,7 +75,7 @@ class KategoriController extends Controller
         $kategori->nama = $request->nama;
         $kategori->save();
 
-        // Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
         return redirect()->route('kategori.index');
     }
 
@@ -85,7 +86,10 @@ class KategoriController extends Controller
     {
         $kategori = Kategori::findOrFail($id);
         $kategori->delete();
-        // Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        
+        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('kategori.index');
+        
+
     }
 }

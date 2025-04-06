@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('nama_perusahaan');
             $table->string('nama');
             $table->integer('jumlah');
+            $table->integer('harga_beli');
             $table->date('tanggal');
             $table->text('alamat');
+
 
             $table->timestamps();
         });

@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Models\CatatanKeuangan;
+use App\Models\Penggajian;
+use App\Models\Pembelian;
+
+
 use Illuminate\Http\Request;
 
 class CatatanKeuanganController extends Controller
@@ -12,8 +17,11 @@ class CatatanKeuanganController extends Controller
      */
     public function index()
     {
-        $catatanKeuangan = CatatanKeuangan::all();  // Mengambil semua data catatan keuangan
-        return view('admin.catatanKeuangan.index', compact('catatanKeuangan'));
+        $catatanKeuangan = CatatanKeuangan::all(); // Mengambil semua data catatan keuangan
+        $penggajian = Penggajian::all(); // Mengambil semua data penggajian
+        $pembelian = Pembelian::all();
+
+        return view('admin.catatanKeuangan.index', compact('catatanKeuangan','penggajian','pembelian'));
     }
 
     /**
@@ -45,6 +53,7 @@ class CatatanKeuanganController extends Controller
         $catatanKeuangan->save();
 
         // Redirect ke halaman index setelah menyimpan
+        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
         return redirect()->route('catatankeuangan.index');
     }
 
@@ -86,6 +95,7 @@ class CatatanKeuanganController extends Controller
         $catatanKeuangan->save();
 
         // Redirect ke halaman index setelah update
+        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
         return redirect()->route('catatankeuangan.index');
     }
 
@@ -98,6 +108,7 @@ class CatatanKeuanganController extends Controller
         $catatanKeuangan->delete();
 
         // Redirect ke halaman index setelah menghapus
+        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('catatankeuangan.index');
     }
 }

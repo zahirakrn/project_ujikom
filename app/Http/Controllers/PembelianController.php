@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
+use Carbon\Carbon;
 use App\Models\pembelian;
+use App\Models\barang;
+
 use Illuminate\Http\Request;
 
 class PembelianController extends Controller
@@ -29,27 +33,31 @@ class PembelianController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_perusahaan' => 'required',
-            'nama' => 'required',
-            'jumlah' => 'required',
-            'tanggal' => 'required',
-            'alamat' => 'required',
-        ]);
+        // $request->validate([
+        //     'nama_perusahaan' => 'required',
+        //     'nama' => 'required',
+        //     'jumlah' => 'required',
+        //     'harga_beli' => 'required',
+        //     'tanggal' => 'required',
+        //     'alamat' => 'required',
+        // ]);
+
+        $tanggal = Carbon::parse($request->tanggal)->format('d F Y');
 
 
         $pembelian = new Pembelian();
         $pembelian->nama_perusahaan = $request->nama_perusahaan;
         $pembelian->nama= $request->nama;
         $pembelian->jumlah = $request->jumlah;
+        $pembelian->harga_beli = $request->harga_beli;
         $pembelian->tanggal = $request->tanggal;
         $pembelian->alamat= $request->alamat;
         $pembelian->save();
 
-        // Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+
+        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
         return redirect()->route('pembelian.index');
     }
-
     /**
      * Display the specified resource.
      */
@@ -76,19 +84,24 @@ class PembelianController extends Controller
             'nama_perusahaan' => 'required',
             'nama' => 'required',
             'jumlah' => 'required',
+            'harga_beli' => 'required',
             'tanggal' => 'required',
             'alamat' => 'required',
         ]);
+
+        $tanggal = Carbon::parse($request->tanggal)->format('d F Y');
+
 
         $pembelian = Pembelian::findOrFail($id);
         $pembelian->nama_perusahaan = $request->nama_perusahaan;
         $pembelian->nama= $request->nama;
         $pembelian->jumlah = $request->jumlah;
+        $pembelian->harga_beli = $request->harga_beli;
         $pembelian->tanggal = $request->tanggal;
         $pembelian->alamat= $request->alamat;
         $pembelian->save();
 
-        // Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
         return redirect()->route('pembelian.index');
     }
 
@@ -100,7 +113,7 @@ class PembelianController extends Controller
         $pembelian = Pembelian::findOrFail($id);
         $pembelian->delete();
 
-        // Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('pembelian.index');
     }
 }

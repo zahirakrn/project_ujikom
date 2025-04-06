@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Models\barang;
 use App\Models\pembelian;
 use App\Models\kategori;
@@ -9,12 +10,40 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
+    public function generateKodeBarang($kategoriId)
+    {
+        $kategori = Kategori::findOrFail($kategoriId);
+        $count = Barang::where('id_kategori', $kategoriId)->count() + 1;
+        $kodeBarang = strtoupper(substr($kategori->nama, 0, 3)) . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+
+        return response()->json(['kode_barang' => $kodeBarang]);
+    }
+
+    public function getHargaBeli($pembelianId)
+    {
+        $pembelian = Pembelian::findOrFail($pembelianId);
+
+        // Cari semua pembelian dengan nama yang sama
+        $totalStok = Pembelian::where('nama', $pembelian->nama)->sum('jumlah');
+
+        return response()->json([
+            'harga_beli' => $pembelian->harga_beli,
+            'jumlah' => $totalStok, // Total stok
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $barang = Barang::all();  // Mengambil semua data 
+        $barang = Barang::with(['kategori', 'pembelian'])
+            ->get()
+            ->unique(function ($item) {
+                return $item->pembelian->nama; // Hanya ambil nama barang unik dari pembelian
+            })
+            ->values();
+        // $pembelian = Pembelian::all();
         return view('admin.barang.index', compact('barang'));
     }
 
@@ -24,11 +53,12 @@ class BarangController extends Controller
     public function create()
     {
         $barang = Barang::all();
-        $pembelian = Pembelian::all();
         $kategori = Kategori::all();
 
+        // Ambil nama unik dari pembelian, pakai id pertama sebagai value
+        $pembelian = Pembelian::selectRaw('MIN(id) as id, nama')->groupBy('nama')->orderBy('nama')->get();
 
-        return view('admin.barang.create', compact('pembelian', 'kategori','barang'));
+        return view('admin.barang.create', compact('pembelian', 'kategori', 'barang'));
     }
 
     /**
@@ -39,25 +69,39 @@ class BarangController extends Controller
         $request->validate([
             'id_kategori' => 'required',
             'id_pembelian' => 'required',
-            'nama_barang'=> 'required',
-            'harga_beli' => 'required',
-            'harga_jual' => 'required',
-            'stok' => 'required',
-            'unit' => 'required',
+            'kode_barang' => 'required|string',
+            'harga_jual' => 'required|numeric',
+            'unit' => 'required|string',
         ]);
 
+        $pembelian = Pembelian::findOrFail($request->id_pembelian);
+        $namaBarang = $pembelian->nama;
 
-        $barang = new Barang();
-        $barang->id_kategori = $request->id_kategori;
-        $barang->id_pembelian = $request->id_pembelian;
-        $barang->nama_barang = $request->nama_barang;
-        $barang->harga_beli = $request->harga_beli;
-        $barang->harga_jual = $request->harga_jual;
-        $barang->stok = $request->stok;
-        $barang->unit = $request->unit;
-        $barang->save();
+        $totalStok = Pembelian::where('nama', $namaBarang)->sum('jumlah');
 
-        // Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+        $barang = Barang::where('kode_barang', trim($request->kode_barang))
+            ->where('id_kategori', $request->id_kategori)
+            ->first();
+        if ($barang) {
+            $barang->update([
+                'stok' => $totalStok,
+                'id_pembelian' => $request->id_pembelian,
+                'harga_jual' => $request->harga_jual,
+                'unit' => $request->unit,
+            ]);
+            Alert::success('Success', 'Stok Barang Diupdate dari Pembelian')->autoClose(1000);
+        } else {
+            Barang::create([
+                'id_kategori' => $request->id_kategori,
+                'id_pembelian' => $request->id_pembelian,
+                'kode_barang' => trim($request->kode_barang),
+                'harga_jual' => $request->harga_jual,
+                'stok' => $totalStok,
+                'unit' => $request->unit,
+            ]);
+            Alert::success('Success', 'Barang Baru Ditambahkan')->autoClose(1000);
+        }
+
         return redirect()->route('barang.index');
     }
 
@@ -75,10 +119,10 @@ class BarangController extends Controller
     public function edit($id)
     {
         $barang = Barang::findOrFail($id);
-        $pembelian= Pembelian::all();
+        $pembelian = Pembelian::all();
         $kategori = Kategori::all();
 
-        return view('admin.barang.edit', compact('pembelian','kategori', 'barang'));
+        return view('admin.barang.edit', compact('pembelian', 'kategori', 'barang'));
     }
 
     /**
@@ -89,26 +133,28 @@ class BarangController extends Controller
         $request->validate([
             'id_kategori' => 'required',
             'id_pembelian' => 'required',
-            'nama_barang' => 'required',
-            'harga_beli' => 'required',
-            'harga_jual' => 'required',
-            'stok' => 'required',
-            'unit' => 'required',
+            'kode_barang' => 'required|string',
+            'harga_jual' => 'required|numeric',
+            'unit' => 'required|string',
         ]);
 
-
         $barang = Barang::findOrFail($id);
-        $barang->id_kategori = $request->id_kategori;
-        $barang->id_pembelian = $request->id_pembelian;
-        $barang->nama_barang = $request->nama_barang;
-        $barang->harga_beli = $request->harga_beli;
-        $barang->harga_jual = $request->harga_jual;
-        $barang->stok = $request->stok;
-        $barang->unit = $request->unit;
-        $barang->save();
 
+        $pembelian = Pembelian::findOrFail($request->id_pembelian);
+        $namaBarang = $pembelian->nama;
 
-        // Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        $totalStok = Pembelian::where('nama', $namaBarang)->sum('jumlah');
+
+        $barang->update([
+            'id_kategori' => $request->id_kategori,
+            'id_pembelian' => $request->id_pembelian,
+            'kode_barang' => trim($request->kode_barang),
+            'harga_jual' => $request->harga_jual,
+            'stok' => $totalStok,
+            'unit' => $request->unit,
+        ]);
+
+        Alert::success('Success', 'Data Barang Diupdate')->autoClose(1000);
         return redirect()->route('barang.index');
     }
 
@@ -120,7 +166,7 @@ class BarangController extends Controller
         $barang = Barang::findOrFail($id);
         $barang->delete();
 
-        // Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('barang.index');
     }
 }

@@ -1,29 +1,38 @@
 @extends('layouts.backend.template')
+@section('styles')
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+@endsection
 @section('content')
     <div class="content-page">
         <div class="content">
-
-            <!-- Start Content-->
             <div class="container-fluid">
-                <h4 class="fw-bold py-3 mb-4">
-                    <span class="text-muted fw-light">Tabel /</span> Barang
-                </h4>
-                <div class="col-md-12">
-                    <div class="card overflow-hidden mb-0">
-                        <div class="card-header">
-                            <div class="d-flex align-items-center">
-                                <h5 class="card-title text-black mb-0">Barang</h5>
-                                <a href="{{ route('barang.create') }}" class="btn btn-primary ms-auto">+ Tambah Data</a>
+                <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+                    <div class="flex-grow-1">
+                        <h4 class="fs-18 fw-semibold m-0">Tabel Barang</h4>
+                    </div>
+                    <div class="text-end">
+                        <ol class="breadcrumb m-0 py-0">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Tabel</a></li>
+                            <li class="breadcrumb-item active">Barang</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Barang</h5>
+                                <a href="{{ route('barang.create') }}" class="btn btn-outline-primary">+ Tambah Data</a>
                             </div>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-traffic mb-0">
+                            <div class="card-body">
+                                <table class="table table-striped table-bordered" id="example">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Kategori</th>
-                                            <th>Nama Perusahaan</th>
+                                            <th>Kode Barang</th>
                                             <th>Nama Barang</th>
                                             <th>Harga Beli</th>
                                             <th>Harga Jual</th>
@@ -37,21 +46,58 @@
                                             <tr>
                                                 <td>{{ $loop->index + 1 }}</td>
                                                 <td>{{ $data->kategori->nama }}</td>
-                                                <td>{{ $data->pembelian->nama_perusahaan}}</td>
-                                                <td>{{ $data->nama_barang }}</td>
-                                                <td>{{ $data->harga_beli }}</td>
+                                                <td>{{ $data->kode_barang }}</td>
+                                                <td>{{ $data->pembelian->nama }}</td>
+                                                <td>{{ $data->pembelian->harga_beli }}</td>
                                                 <td>{{ $data->harga_jual }}</td>
                                                 <td>{{ $data->stok }}</td>
                                                 <td>{{ $data->unit }}</td>
                                                 <td>
-                                                    <a href="{{ route('barang.edit', $data->id) }}"
-                                                        class="btn btn-warning btn-sm">Edit</a>
-                                                    <form action="{{ route('barang.destroy', $data->id) }}" method="POST"
-                                                        style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                                    </form>
+                                                    <div class="d-flex justify-content-start align-items-center">
+                                                        <!-- Tombol Edit -->
+                                                        <a aria-label="anchor" class="btn btn-sm bg-primary-subtle me-2"
+                                                            data-bs-toggle="tooltip" data-bs-original-title="Edit"
+                                                            href="{{ route('barang.edit', $data->id) }}">
+                                                            <i class="mdi mdi-pencil-outline fs-14 text-primary"></i></a>
+
+                                                        <!-- Form untuk Delete -->
+                                                        <form action="{{ route('barang.destroy', $data->id) }}"
+                                                            method="POST" class="delete-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button"
+                                                                class="btn btn-sm bg-danger-subtle btn-delete"
+                                                                data-id="{{ $data->id }}" data-bs-toggle="tooltip"
+                                                                data-bs-original-title="Hapus">
+                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
+                                                            </button>
+                                                        </form>
+                                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                        <script>
+                                                            document.querySelectorAll('.btn-delete').forEach(button => {
+                                                                button.addEventListener('click', function(event) {
+                                                                    event.preventDefault(); // Mencegah form langsung terkirim
+
+                                                                    let form = this.closest("form"); // Ambil form terdekat dari tombol
+                                                                    let itemId = this.getAttribute('data-id'); // Ambil ID item
+
+                                                                    Swal.fire({
+                                                                        title: "Hapus Data!",
+                                                                        text: "Apakah Anda Yakin?",
+                                                                        icon: "warning",
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor: "#3085d6",
+                                                                        cancelButtonColor: "#d33",
+                                                                        confirmButtonText: "Yes, delete it!"
+                                                                    }).then((result) => {
+                                                                        if (result.isConfirmed) {
+                                                                            form.submit(); // Kirim form hanya jika dikonfirmasi
+                                                                        }
+                                                                    });
+                                                                });
+                                                            });
+                                                        </script>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -59,39 +105,36 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="card-footer py-0 border-top">
-                            <div class="row align-items-center">
-                                <div class="col-sm">
-                                    <div class="text-block text-center text-sm-start">
-                                        <span class="fw-medium">1 of 3</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-auto mt-3 mt-sm-0">
-                                    <div class="pagination gap-2 justify-content-center py-3 ps-0 pe-3">
-                                        <ul class="pagination mb-0">
-                                            <li class="page-item disabled">
-                                                <a class="page-link me-2 rounded-2" href="javascript:void(0);"> Prev </a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a class="page-link rounded-2 me-2" href="#">1</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link me-2 rounded-2" href="#">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link text-primary rounded-2" href="javascript:void(0);"> Next
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 @endsection
 
+@push('scripts')
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Initialize DataTable -->
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable({
+                "paging": true, // Aktifkan Pagination
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], // Show entries
+                "searching": true, // Aktifkan Search Box
+                "ordering": true, // Sorting Aktif
+                "info": true, // Show Info Text
+                "language": {
+                    "lengthMenu": "Show _MENU_ entries",
+                    "search": "Search:"
+                }
+            });
+        });
+    </script>
+@endpush
 

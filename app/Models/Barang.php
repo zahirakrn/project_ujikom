@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,9 +8,18 @@ class Barang extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_kategori','id_pembelian', 'nama_barang', 'harga_beli', 'harga_jual','stok','unit', ];
-    public $timestamp = true;
+    protected $fillable = ['id_kategori', 'id_pembelian', 'kode_barang', 'nama_barang', 'harga_beli', 'harga_jual', 'stok', 'unit'];
+    public $timestamps = true;
 
+    /**
+     * Relasi Many-to-Many dengan Transaksi
+     */
+    public function transaksis()
+    {
+        return $this->belongsToMany(Transaksi::class, 'barang_transaksi')->withPivot('jumlah', 'subtotal')->withTimestamps();
+    }
+
+    // Relasi dengan kategori
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'id_kategori');
@@ -22,13 +30,9 @@ class Barang extends Model
         return $this->belongsTo(Pembelian::class, 'id_pembelian');
     }
 
+    // Relasi dengan catatan stok
     public function catatanStok()
     {
         return $this->hasMany(CatatanStok::class, 'id_barang');
-    }
-
-    public function detailTransaksi()
-    {
-        return $this->hasMany(DetailTransaksi::class, 'id_barang');
     }
 }
