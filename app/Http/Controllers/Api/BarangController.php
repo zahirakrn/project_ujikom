@@ -28,7 +28,7 @@ class BarangController extends Controller
 
     public function index(): JsonResponse
     {
-        $barang = Barang::all();
+        $barang = Barang::with('pembelian')->get();
         return response()->json($barang);
     }
 

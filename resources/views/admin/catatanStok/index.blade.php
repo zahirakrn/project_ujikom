@@ -17,9 +17,17 @@
                             <li class="breadcrumb-item active">Catatan Stok</li>
                         </ol>
                         <br>
-                        <a href="{{ route('laporan.catatanstok.pdf') }}" class="btn btn-outline-primary">
-                            Export Laporan Catatan Stok
-                        </a>
+                        <div class="dropdown" style="margin-bottom: 20px;">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                onclick="toggleExportDropdown()">
+                                Export Laporan Catatan Stok
+                            </button>
+                            <div id="exportDropdown" class="dropdown-menu show-on-click"
+                                style="display: none; position: absolute; z-index: 10;">
+                                <a class="dropdown-item" href="{{ route('laporan.catatanstok.pdf') }}">Export ke PDF</a>
+                                <a class="dropdown-item" href="">Export ke Excel</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -140,4 +148,21 @@
             });
         });
     </script>
+    <script>
+    function toggleExportDropdown() {
+        var dropdown = document.getElementById('exportDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Tutup dropdown kalau klik di luar
+    window.addEventListener('click', function(e) {
+        if (!e.target.matches('.dropdown-toggle')) {
+            var dropdown = document.getElementById('exportDropdown');
+            if (dropdown && dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        }
+    });
+</script>
+
 @endpush

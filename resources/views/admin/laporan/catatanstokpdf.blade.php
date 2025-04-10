@@ -72,7 +72,6 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('img/logo.png') }}" alt="Logo Toko" class="logo">
         <div class="judul">
             <h1>TB Kurnia Jaya</h1>
             <h2>Laporan Catatan Stok</h2>
@@ -104,5 +103,4 @@
         </tbody>
     </table>
 </body>
-
 </html>

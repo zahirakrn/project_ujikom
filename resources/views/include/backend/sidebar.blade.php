@@ -70,7 +70,7 @@
                              <li>
                                  <a href="{{ route('catatanstok.index') }}" class="tp-link">Catatan Stok</a>
                              </li>
-                            <li>
+                             <li>
                                  <a href="{{ route('catatankeuangan.index') }}" class="tp-link">Catatan Keuangan</a>
                              </li>
                          </ul>

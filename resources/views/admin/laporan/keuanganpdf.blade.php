@@ -80,7 +80,6 @@
 <body>
 
     <div class="header">
-        <img src="{{ public_path('admiiin/assets/logo/tb') }}" alt="Logo Toko" class="logo">
         <div class="title">
             <h1>TB Kurnia Jaya</h1>
             <h2>Laporan Keuangan</h2>
@@ -88,7 +87,6 @@
     </div>
 
     <hr>
-
     <h3>Penggajian</h3>
     <h3>Total Penggajian Karyawan</h3>
     <table>
@@ -111,7 +109,6 @@
             @endforeach
         </tbody>
     </table>
-
     <h3>Pembelian</h3>
     <h3>Total Pembelian Barang</h3>
     <table>
@@ -134,7 +131,6 @@
             @endforeach
         </tbody>
     </table>
-
     <h3>Pengeluaran</h3>
     <h3>Total Pengeluaran Bulanan</h3>
     <table>
@@ -157,6 +153,5 @@
             </tr>
         </tbody>
     </table>
-
 </body>
 </html>

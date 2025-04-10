@@ -1,9 +1,9 @@
 @extends('layouts.backend.template')
 @section('content')
     <div class="content-page">
-        <div class="content">
+        <d class="content">
 
-            <!-- Start Content-->
+
             <div class="container-fluid">
                 <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                     <div class="flex-grow-1">
@@ -26,7 +26,8 @@
                             <div class="col-sm-5 text-center text-sm-left">
                                 <div class="card-body pb-0 px-0 px-md-4">
                                     <img src="{{ asset('admiiin/assets/logo/tb.png') }}" height="90" width="90"
-                                        alt="Logo TB Kurnia Jaya" class="img-fluid" style="margin-top: -120px; margin-right: -180px" />
+                                        alt="Logo TB Kurnia Jaya" class="img-fluid"
+                                        style="margin-top: -120px; margin-right: -180px" />
                                 </div>
                             </div>
                         </div>
@@ -84,7 +85,7 @@
                                                 <a class="dropdown-item" href="{{ route('barang.index') }}"">Total
                                                     Barang</a>
                                             </div>
-                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $barang }} Items</h3>
+                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $barangCount }} Items</h3>
                                         </div>
 
                                         <div>
@@ -150,106 +151,153 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col-xl-6 col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Grafik Pembelian Barang per Bulan</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div style="position: relative; height: 350px;">
-                                        <canvas id="grafikPembelian"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                @php
+                                    $stokMenipis = $barang->where('stok', '<=', 50)->count();
+                                @endphp
 
-                        <div class="col-xl-6 col-lg-6">
-                            <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-title mb-0">Grafik Transaksi per Bulan</h5>
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <h5 class="card-title text-black mb-0">Stok Barang</h5>
+                                        @if ($stokMenipis > 0)
+                                            <i class="fas fa-bell text-danger animate__animated animate__shakeX"
+                                                title="Ada stok menipis!" role="button" data-bs-toggle="modal"
+                                                data-bs-target="#notifStokModal"></i>
+                                        @else
+                                            <i class="fas fa-bell text-muted" title="Semua stok aman"></i>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="card-body">
-                                    <div style="position: relative; height: 350px;">
-                                        <canvas id="grafikTransaksi"></canvas>
-                                    </div>
+                                    <ul class="list-group list-group-flush list-group-no-gutters">
+                                        @foreach ($barang as $data)
+                                            <li class="list-group-item">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1 ms-3 align-content-center">
+                                                        <div class="row">
+                                                            <div class="col-7 col-md-5 order-md-1">
+                                                                <h6 class="mb-1 text-black fs-15">
+                                                                    {{ $data->pembelian->nama ?? '-' }}
+                                                                </h6>
+                                                                <span class="fs-14 text-muted">
+                                                                    Kode: {{ $data->kode_barang }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
+                                                                <h6
+                                                                    class="mb-1 fs-14 {{ $data->stok > 50 ? 'text-primary' : 'text-danger' }}">
+                                                                    Stok: {{ $data->stok }} {{ $data->unit }}
+                                                                </h6>
+                                                                <span class="fs-13 text-muted">
+                                                                    Harga Jual:
+                                                                    Rp{{ number_format($data->harga_jual, 0, ',', '.') }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-auto col-md-3 order-md-2 align-self-center">
+                                                                <span
+                                                                    class="badge bg-primary-subtle text-primary fw-semibold rounded-pill">
+                                                                    {{ $data->kategori->nama ?? '-' }}
+                                                                </span>
+                                                                @if ($data->stok > 50)
+                                                                    <span
+                                                                        class="badge bg-info-subtle text-info fw-semibold rounded-pill">
+                                                                        Stok Aman
+                                                                    </span>
+                                                                @else
+                                                                    <span
+                                                                        class="badge bg-danger-subtle text-danger fw-semibold rounded-pill">
+                                                                        Stok Menipis
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Grafik Pembelian & Transaksi Perbulan </h5>
+                            </div>
+                            <div class="card-body">
+                                <div style="position: relative; height: 350px;">
+                                    <canvas id="grafikGabungan"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="modal fade" id="notifStokModal" tabindex="-1" aria-labelledby="notifStokLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-sm"> <!-- modal-sm = lebih sempit -->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="notifStokLabel">Info Stok Barang</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    @foreach ($barang as $item)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ $item->pembelian->nama ?? 'Barang Tidak Dikenal' }}
+                                            @if ($item->stok <= 50)
+                                                <span class="badge bg-danger rounded-pill">Stok:
+                                                    {{ $item->stok }}</span>
+                                            @else
+                                                <span class="badge bg-success rounded-pill">Aman</span>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+    </div>
+    </div>
+    </div>
     </div>
     @push('scripts')
+        <canvas id="grafikGabungan"></canvas>
+
         <script>
-            const ctx = document.getElementById('grafikPembelian').getContext('2d');
-            const grafikPembelian = new Chart(ctx, {
+            const ctxGabungan = document.getElementById('grafikGabungan').getContext('2d');
+            const grafikGabungan = new Chart(ctxGabungan, {
                 type: 'bar',
                 data: {
-                    labels: @json($bulan),
+                    labels: @json($bulan), // pastikan $bulan dan $bulanTransaksi urut dan sama ya
                     datasets: [{
-                        label: 'Jumlah Pembelian',
-                        data: @json($jumlah),
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                        barThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            top: 10,
-                            bottom: 10
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0,
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top'
+                            label: 'Jumlah Pembelian',
+                            data: @json($jumlah),
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            barThickness: 40
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Jumlah: ' + context.parsed.y;
-                                }
-                            }
+                        {
+                            label: 'Jumlah Transaksi',
+                            data: @json($jumlahTransaksi),
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            barThickness: 40
                         }
-                    }
-                }
-            });
-        </script>
-    @endpush
-    @push('scripts')
-        <script>
-            const ctxTransaksi = document.getElementById('grafikTransaksi').getContext('2d');
-            const grafikTransaksi = new Chart(ctxTransaksi, {
-                type: 'bar',
-                data: {
-                    labels: @json($bulanTransaksi),
-                    datasets: [{
-                        label: 'Jumlah Transaksi',
-                        data: @json($jumlahTransaksi),
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                        barThickness: 40
-                    }]
+                    ]
                 },
                 options: {
                     responsive: true,

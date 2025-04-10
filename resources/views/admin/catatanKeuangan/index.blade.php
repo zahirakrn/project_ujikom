@@ -19,9 +19,18 @@
                             <li class="breadcrumb-item active">Keuangan</li>
                         </ol>
                         <br>
-                        <a href="{{ route('laporan.keuangan.pdf') }}" class="btn btn-outline-primary">
-                            Export Laporan Keuangan
-                        </a>
+                        <div class="dropdown" style="margin-bottom: 20px;">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                onclick="toggleExportDropdown()">
+                                Export Laporan Catatan Stok
+                            </button>
+                            <div id="exportDropdown" class="dropdown-menu show-on-click"
+                                style="display: none; position: absolute; z-index: 10;">
+                                <a class="dropdown-item" href="{{ route('laporan.catatanstok.pdf') }}">Export ke PDF</a>
+                                <a class="dropdown-item" href="">Export ke Excel</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 

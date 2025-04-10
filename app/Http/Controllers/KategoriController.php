@@ -86,10 +86,10 @@ class KategoriController extends Controller
     {
         $kategori = Kategori::findOrFail($id);
         $kategori->delete();
-        
+
         Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('kategori.index');
-        
+
 
     }
 }

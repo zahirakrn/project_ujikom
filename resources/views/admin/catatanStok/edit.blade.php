@@ -28,9 +28,9 @@
                                 <div class="mb-3">
                                     <label for="simpleinput" class="form-label">Nama Barang</label>
                                     <select name="id_barang" class="form-control">
-                                        <option selected disabled>Pilih Barang</option>
+                                      <option selected disabled>Pilih Barang</option>
                                         @foreach ($barang as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_barang }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->pembelian->nama }}</option>
                                         @endforeach
                                     </select>
                                 </div>

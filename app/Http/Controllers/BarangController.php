@@ -35,15 +35,17 @@ class BarangController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         $barang = Barang::with(['kategori', 'pembelian'])
             ->get()
             ->unique(function ($item) {
-                return $item->pembelian->nama; // Hanya ambil nama barang unik dari pembelian
+                return optional($item->pembelian)->nama;
             })
             ->values();
-        // $pembelian = Pembelian::all();
+            
+
         return view('admin.barang.index', compact('barang'));
     }
 
@@ -55,7 +57,7 @@ class BarangController extends Controller
         $barang = Barang::all();
         $kategori = Kategori::all();
 
-        // Ambil nama unik dari pembelian, pakai id pertama sebagai value
+
         $pembelian = Pembelian::selectRaw('MIN(id) as id, nama')->groupBy('nama')->orderBy('nama')->get();
 
         return view('admin.barang.create', compact('pembelian', 'kategori', 'barang'));
