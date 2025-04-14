@@ -8,6 +8,7 @@ use App\Models\Pembelian;
 use App\Models\Kategori;
 use App\Models\Barang;
 use App\Models\Transaksi;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -71,6 +72,9 @@ class HomeController extends Controller
         $jumlahTransaksi[] = $dataTransaksi[$i] ?? 0;
     }
 
+//     $stokMenipisCount = Barang::where('stok', '<=', 50)->count();
+// $barang           = Barang::all(); // Atau bisa disesuaikan dengan data yang ingin ditampilkan
+
     return view('home', compact(
         'kategori',
         'barang',
@@ -80,8 +84,17 @@ class HomeController extends Controller
         'bulan',
         'jumlah',
         'bulanTransaksi',
-        'jumlahTransaksi'
+        'jumlahTransaksi',
+        // 'stokMenipisCount',
     ));
 }
+ public function profile()
+    {
+        $title = 'Profil';
+        $user = auth()->user();
+        return view('profile.index', compact('user', 'title'));
+
+        return abort(403);
+    }
 
 }

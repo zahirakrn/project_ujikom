@@ -6,14 +6,19 @@ use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\BarangController;
 use App\Http\Controllers\Api\PembelianController;
 use App\Http\Controllers\Api\TransaksiController;
+use App\Http\Controllers\Api\PenggajianController;
 
-Route::get('/user/profile', function (Request $request) {
+use App\Http\Controllers\Api\AuthController;
+
+Route::get('/profile', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
 Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+// Route::post('/profile', [\App\Http\Controllers\Api\AuthController::class, 'profile']);
+// Route::middleware('auth:sanctum')->get('/profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
 
 Route::prefix('kategori')->group(function () {
     Route::get('/', [KategoriController::class, 'index']);
@@ -21,7 +26,6 @@ Route::prefix('kategori')->group(function () {
     Route::get('/{id}', [KategoriController::class, 'show']);
     Route::put('/{id}', [KategoriController::class, 'update']);
     Route::delete('/{id}', [KategoriController::class, 'destroy']);
-
 });
 
 Route::prefix('barang')->group(function () {
@@ -48,3 +52,10 @@ Route::prefix('transaksi')->group(function () {
     Route::delete('/{id}', [TransaksiController::class, 'destroy']);
 });
 
+Route::prefix('penggajian')->group(function () {
+    Route::get('/', [PenggajianController::class, 'index']);
+    Route::post('/', [PenggajianController::class, 'store']);
+    Route::get('/{id}', [PenggajianController::class, 'show']);
+    Route::put('/{id}', [PenggajianController::class, 'update']);
+    Route::delete('/{id}', [PenggajianController::class, 'destroy']);
+});

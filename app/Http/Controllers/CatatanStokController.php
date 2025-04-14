@@ -15,11 +15,19 @@ class CatatanStokController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $catatanStok = CatatanStok::all();  
-        return view('admin.catatanStok.index', compact('catatanStok'));
+public function index(Request $request)
+{
+    $query = CatatanStok::with('barang.pembelian');
+
+    if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
+        $query->whereBetween('tanggal', [$request->tanggal_mulai, $request->tanggal_selesai]);
     }
+
+    $catatanStok = $query->latest()->get();
+
+    return view('admin.catatanStok.index', compact('catatanStok'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -28,7 +36,7 @@ class CatatanStokController extends Controller
     {
         $catatanStok= CatatanStok::all();
         $pembelian = DB::table('pembelians')
-         ->select('nama', DB::raw('MIN(id) as id')) 
+         ->select('nama', DB::raw('MIN(id) as id'))
          ->groupBy('nama')
          ->get();
         $barang = Barang::all();

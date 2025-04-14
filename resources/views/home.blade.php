@@ -159,17 +159,16 @@
                                 @php
                                     $stokMenipis = $barang->where('stok', '<=', 50)->count();
                                 @endphp
-
                                 <div class="card-header">
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <h5 class="card-title text-black mb-0">Stok Barang</h5>
-                                        @if ($stokMenipis > 0)
-                                            <i class="fas fa-bell text-danger animate__animated animate__shakeX"
-                                                title="Ada stok menipis!" role="button" data-bs-toggle="modal"
-                                                data-bs-target="#notifStokModal"></i>
-                                        @else
-                                            <i class="fas fa-bell text-muted" title="Semua stok aman"></i>
-                                        @endif
+                                            @if ($stokMenipis > 0)
+                                                <i class="fas fa-bell text-danger animate__animated animate__shakeX"
+                                                    title="Ada stok menipis!" role="button" data-bs-toggle="modal"
+                                                    data-bs-target="#notifStokModal"></i>
+                                            @else
+                                                <i class="fas fa-bell text-muted" title="Semua stok aman"></i>
+                                            @endif
                                     </div>
                                 </div>
                                 <div class="card-body">
