@@ -7,32 +7,100 @@
             <div class="container-fluid">
                 <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                     <div class="flex-grow-1">
-                        <h4 class="fs-18 fw-semibold m-0">Dashboard</h4>
+                        <h4 class="fs-18 fw-semibold m-0">Beranda</h4>
                     </div>
                 </div>
                 <div class="col-lg-15 mb-4 order-0">
-                    <div class="card rounded-3">
-                        <div class="d-flex align-items-end row">
+                    <div class="card rounded-4 shadow-lg border-0 overflow-hidden">
+                        <div class="card-header bg-pattern p-0">
+                        </div>
+
+                        <div class="d-flex align-items-center row g-0">
+                            <!-- Content Section -->
                             <div class="col-sm-7">
-                                <div class="card-body">
-                                    <h5 class="card-title text-primary">Selamat Datang di TB Kurnia Jaya 🎉</h5>
-                                    <p class="mb-4">
-                                        {{ Auth::user()->name }} TB Kurnia Jaya
+                                <div class="card-body position-relative p-4">
+                                    <div class="welcome-badge mb-3">
+                                        <span class="badge bg-primary-subtle text-primary rounded-pill px-5 py-2">
+                                            <i class="bx bx-star me-10"></i> Selamat Datang !
+                                        </span>
+                                    </div>
+
+                                    <h4 class="card-title fw-bold mb-1">
+                                        <span class="text-primary">TB Kurnia Jaya</span>
+                                        <i class="bx bx-crown text-warning ms-1"></i>
+                                    </h4>
+
+                                    <p class="mb-3 text-muted">
+                                        Halo, <span class="fw-semibold text-dark">{{ Auth::user()->name }}</span>!
+                                        Senang melihat Anda kembali.
                                     </p>
-                                    <a href="{{ route('profile.index') }}" class="btn btn-sm btn-outline-primary">View
-                                        Profile</a>
+
+                                    <div class="d-flex gap-2 mt-4">
+                                        <a href="{{ route('profile.index') }}"
+                                            class="btn btn-primary btn-sm rounded-pill shadow-sm">
+                                            <i class="bx bx-user-circle me-1"></i> Lihat Profil
+                                        </a>
+                                    </div>
+
+                                    <!-- Decorative Elements -->
+                                    <div class="position-absolute top-0 end-0 mt-2 me-2">
+                                        <span class="badge bg-success rounded-circle p-2">
+                                            <i class="bx bx-check"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-5 text-center text-sm-left">
-                                <div class="card-body pb-0 px-0 px-md-4">
-                                    <img src="{{ asset('admiiin/assets/logo/tb.png') }}" height="90" width="90"
-                                        alt="Logo TB Kurnia Jaya" class="img-fluid"
-                                        style="margin-top: -120px; margin-right: -180px" />
+                            <div class="col-sm-5">
+                                <div class="position-relative h-100 d-flex justify-content-center align-items-center p-3">
+                                    <div class="logo-container position-relative">
+                                        <div class="logo-backdrop position-absolute rounded-circle"
+                                            style="width: 140px; height: 140px; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        </div>
+                                        <img src="{{ asset('admiiin/assets/logo/tb.png') }}" height="120" width="120"
+                                            alt="Logo TB Kurnia Jaya" class="img-fluid position-relative z-1" />
+                                        <div class="position-absolute rounded-circle bg-primary opacity-10"
+                                            style="width: 30px; height: 30px; top: -10px; right: -15px;"></div>
+                                        <div class="position-absolute rounded-circle bg-warning opacity-10"
+                                            style="width: 20px; height: 20px; bottom: 10px; left: -5px;"></div>
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
+                                        <div class="d-flex gap-2">
+                                            <div class="stats-dot bg-success rounded-circle"
+                                                style="width: 8px; height: 8px;"></div>
+                                            <div class="stats-dot bg-primary rounded-circle"
+                                                style="width: 8px; height: 8px;"></div>
+                                            <div class="stats-dot bg-warning rounded-circle"
+                                                style="width: 8px; height: 8px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light p-3">
+                            <div class="row g-0 text-center">
+                                <div class="col-4">
+                                    <div class="small">
+                                        <div class="fw-semibold">Transaksi</div>
+                                        <div class="text-muted">{{ $transaksi }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-4 border-start border-end">
+                                    <div class="small">
+                                        <div class="fw-semibold">Produk</div>
+                                        <div class="text-muted">Tersedia</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="small">
+                                        <div class="fw-semibold">Status</div>
+                                        <div class="text-primary">Online</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- Start Row -->
                 <div class="row">
                     <div class="col-md-6 col-xl-3">
@@ -156,19 +224,9 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
-                                @php
-                                    $stokMenipis = $barang->where('stok', '<=', 50)->count();
-                                @endphp
                                 <div class="card-header">
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <h5 class="card-title text-black mb-0">Stok Barang</h5>
-                                            @if ($stokMenipis > 0)
-                                                <i class="fas fa-bell text-danger animate__animated animate__shakeX"
-                                                    title="Ada stok menipis!" role="button" data-bs-toggle="modal"
-                                                    data-bs-target="#notifStokModal"></i>
-                                            @else
-                                                <i class="fas fa-bell text-muted" title="Semua stok aman"></i>
-                                            @endif
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -180,6 +238,7 @@
                                                         <div class="row">
                                                             <div class="col-7 col-md-5 order-md-1">
                                                                 <h6 class="mb-1 text-black fs-15">
+                                                                    {{ $loop->iteration }}.
                                                                     {{ $data->pembelian->nama ?? '-' }}
                                                                 </h6>
                                                                 <span class="fs-14 text-muted">
@@ -223,6 +282,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-6">
                         <div class="card h-100">
                             <div class="card-header">
@@ -332,5 +392,77 @@
                 }
             });
         </script>
+    @endpush
+    @push('scripts')
+        <style>
+            .bg-gradient-primary-to-secondary {
+                background: linear-gradient(45deg, #696cff 0%, #8b93ff 100%);
+            }
+
+            .bg-pattern-overlay {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+
+            .welcome-badge {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            .logo-container {
+                animation: float 6s ease-in-out infinite;
+            }
+
+            @keyframes float {
+                0% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+
+                100% {
+                    transform: translateY(0px);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .stats-dot {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.3);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .card {
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            }
+        </style>
     @endpush
 @endsection

@@ -7,7 +7,8 @@ use App\Http\Controllers\Api\BarangController;
 use App\Http\Controllers\Api\PembelianController;
 use App\Http\Controllers\Api\TransaksiController;
 use App\Http\Controllers\Api\PenggajianController;
-
+use App\Http\Controllers\Api\CatatanStokController;
+use App\Http\Controllers\Api\CatatanKeuanganController;
 use App\Http\Controllers\Api\AuthController;
 
 Route::get('/profile', function (Request $request) {
@@ -58,4 +59,20 @@ Route::prefix('penggajian')->group(function () {
     Route::get('/{id}', [PenggajianController::class, 'show']);
     Route::put('/{id}', [PenggajianController::class, 'update']);
     Route::delete('/{id}', [PenggajianController::class, 'destroy']);
+});
+
+Route::prefix('catatanstok')->group(function () {
+    Route::get('/', [CatatanstokController::class, 'index']);
+    Route::post('/', [CatatanStokController::class, 'store']);
+    Route::get('/{id}', [CatatanStokController::class, 'show']);
+    Route::put('/{id}', [CatatanStokController::class, 'update']);
+    Route::delete('/{id}', [CatatanStokController::class, 'destroy']);
+});
+
+Route::prefix('catatankeuangan')->group(function () {
+    Route::get('/', [CatatanKeuanganController::class, 'index']);
+    Route::post('/', [CatatanKeuanganController::class, 'store']);
+    Route::get('/{id}', [CatatanKeuanganController::class, 'show']);
+    Route::put('/{id}', [CatatanKeuanganController::class, 'update']);
+    Route::delete('/{id}', [CatatanKeuanganController::class, 'destroy']);
 });

@@ -44,7 +44,7 @@ class BarangController extends Controller
                 return optional($item->pembelian)->nama;
             })
             ->values();
-            
+
 
         return view('admin.barang.index', compact('barang'));
     }
@@ -171,4 +171,5 @@ class BarangController extends Controller
         Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('barang.index');
     }
+    
 }

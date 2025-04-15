@@ -22,14 +22,17 @@
                 <div class="py-3">
                     <div class="d-flex justify-content-between flex-wrap align-items-end">
                         <div></div>
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" onclick="toggleExportDropdown()">
-                        Export Laporan Keuangan
-                    </button>
-                    <div id="exportDropdown" class="dropdown-menu show-on-click" style="display: none; position: absolute; z-index: 10;">
-                        <a class="dropdown-item" href="{{ route('laporan.keuangan.pdf', request()->only('tanggal_awal', 'tanggal_akhir')) }}">Export ke PDF</a>
-                        <a class="dropdown-item" href="#">Export ke Excel</a>
+                        <div class="dropdown mt-sm-0">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" onclick="toggleExportDropdown()">
+                                Export Laporan Catatan Stok
+                            </button>
+                            <div id="exportDropdown" class="dropdown-menu show-on-click"
+                                style="display: none; position: absolute; z-index: 10;">
+                                <a class="dropdown-item" href="{{ route('laporan.catatanstok.pdf', request()->only('tanggal_mulai', 'tanggal_selesai')) }}">Export ke PDF</a>
+                                {{-- <a class="dropdown-item" href="#">Export ke Excel</a> --}}
+                            </div>
+                        </div>
                     </div>
-                </div>
             <form action="{{ route('catatankeuangan.index') }}" method="GET" class="row g-3 align-items-end mb-4">
                 <div class="col-md-3">
                     <label for="tanggal_awal" class="form-label">Tanggal Mulai</label>
