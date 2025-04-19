@@ -6,9 +6,9 @@ use Alert;
 use App\Models\CatatanKeuangan;
 use App\Models\Penggajian;
 use App\Models\Pembelian;
-
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class CatatanKeuanganController extends Controller
 {

@@ -24,11 +24,11 @@
                         <div></div>
                         <div class="dropdown mt-sm-0">
                             <button class="btn btn-outline-primary dropdown-toggle" type="button" onclick="toggleExportDropdown()">
-                                Export Laporan Catatan Stok
+                                Export Laporan Keuangan
                             </button>
                             <div id="exportDropdown" class="dropdown-menu show-on-click"
                                 style="display: none; position: absolute; z-index: 10;">
-                                <a class="dropdown-item" href="{{ route('laporan.catatanstok.pdf', request()->only('tanggal_mulai', 'tanggal_selesai')) }}">Export ke PDF</a>
+                                <a class="dropdown-item" href="{{ route('laporan.keuangan.pdf', request()->only('tanggal_mulai', 'tanggal_selesai')) }}">Export ke PDF</a>
                                 {{-- <a class="dropdown-item" href="#">Export ke Excel</a> --}}
                             </div>
                         </div>

@@ -1,5 +1,22 @@
 @extends('layouts.backend.template')
 @section('content')
+    <style>
+        .scroll-hide {
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer */
+            scroll-behavior: smooth;
+        }
+
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari */
+        }
+    </style>
+
     <div class="content-page">
         <d class="content">
 
@@ -121,7 +138,7 @@
                                                 <a class="dropdown-item" href="{{ route('kategori.index') }}"">Total
                                                     Kategori </a>
                                             </div>
-                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $kategori }} Items</h3>
+                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $kategori }} Item</h3>
                                         </div>
 
                                         <div>
@@ -153,7 +170,7 @@
                                                 <a class="dropdown-item" href="{{ route('barang.index') }}"">Total
                                                     Barang</a>
                                             </div>
-                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $barangCount }} Items</h3>
+                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $barangCount }} Item</h3>
                                         </div>
 
                                         <div>
@@ -182,7 +199,7 @@
                                                 <a class="dropdown-item" href="{{ route('pembelian.index') }}"">Total
                                                     Pembelian</a>
                                             </div>
-                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $pembelian }} Items</h3>
+                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $pembelian }} Item</h3>
                                         </div>
 
                                         <div>
@@ -212,7 +229,7 @@
                                                 <a class="dropdown-item" href="{{ route('transaksi.index') }}"">Total
                                                     Transaksi</a>
                                             </div>
-                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $transaksi }} Items</h3>
+                                            <h3 class="mb-0 fs-24 text-black me-2">{{ $transaksi }} Item</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -230,58 +247,64 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <ul class="list-group list-group-flush list-group-no-gutters">
-                                        @foreach ($barang as $data)
-                                            <li class="list-group-item">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1 ms-3 align-content-center">
-                                                        <div class="row">
-                                                            <div class="col-7 col-md-5 order-md-1">
-                                                                <h6 class="mb-1 text-black fs-15">
-                                                                    {{ $loop->iteration }}.
-                                                                    {{ $data->pembelian->nama ?? '-' }}
-                                                                </h6>
-                                                                <span class="fs-14 text-muted">
-                                                                    Kode: {{ $data->kode_barang }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
-                                                                <h6
-                                                                    class="mb-1 fs-14 {{ $data->stok > 50 ? 'text-primary' : 'text-danger' }}">
-                                                                    Stok: {{ $data->stok }} {{ $data->unit }}
-                                                                </h6>
-                                                                <span class="fs-13 text-muted">
-                                                                    Harga Jual:
-                                                                    Rp{{ number_format($data->harga_jual, 0, ',', '.') }}
-                                                                </span>
-                                                            </div>
-                                                            <div class="col-auto col-md-3 order-md-2 align-self-center">
-                                                                <span
-                                                                    class="badge bg-primary-subtle text-primary fw-semibold rounded-pill">
-                                                                    {{ $data->kategori->nama ?? '-' }}
-                                                                </span>
-                                                                @if ($data->stok > 50)
-                                                                    <span
-                                                                        class="badge bg-info-subtle text-info fw-semibold rounded-pill">
-                                                                        Stok Aman
+                                    <div class="scroll-hide">
+                                        <ul class="list-group list-group-flush list-group-no-gutters"
+                                            style="padding-right: 10px;">
+                                            @foreach ($barang as $data)
+                                                <li class="list-group-item">
+                                                    <div class="d-flex">
+                                                        <div class="flex-grow-1 ms-3 align-content-center">
+                                                            <div class="row">
+                                                                <div class="col-7 col-md-5 order-md-1">
+                                                                    <h6 class="mb-1 text-black fs-15">
+                                                                        {{ $loop->iteration }}.
+                                                                        {{ $data->pembelian->nama ?? '-' }}
+                                                                    </h6>
+                                                                    <span class="fs-14 text-muted">
+                                                                        Kode: {{ $data->kode_barang }}
                                                                     </span>
-                                                                @else
-                                                                    <span
-                                                                        class="badge bg-danger-subtle text-danger fw-semibold rounded-pill">
-                                                                        Stok Menipis
+                                                                </div>
+                                                                <div
+                                                                    class="col-5 col-md-4 order-md-3 text-end mt-2 mt-md-0">
+                                                                    <h6
+                                                                        class="mb-1 fs-14 {{ $data->stok > 50 ? 'text-primary' : 'text-danger' }}">
+                                                                        Stok: {{ $data->stok }} {{ $data->unit }}
+                                                                    </h6>
+                                                                    <span class="fs-13 text-muted">
+                                                                        Harga Jual:
+                                                                        Rp{{ number_format($data->harga_jual, 0, ',', '.') }}
                                                                     </span>
-                                                                @endif
+                                                                </div>
+                                                                <div
+                                                                    class="col-auto col-md-3 order-md-2 align-self-center">
+                                                                    <span
+                                                                        class="badge bg-primary-subtle text-primary fw-semibold rounded-pill">
+                                                                        {{ $data->kategori->nama ?? '-' }}
+                                                                    </span>
+                                                                    @if ($data->stok > 50)
+                                                                        <span
+                                                                            class="badge bg-info-subtle text-info fw-semibold rounded-pill">
+                                                                            Stok Aman
+                                                                        </span>
+                                                                    @else
+                                                                        <span
+                                                                            class="badge bg-danger-subtle text-danger fw-semibold rounded-pill">
+                                                                            Stok Menipis
+                                                                        </span>
+                                                                    @endif
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="col-md-6">
                         <div class="card h-100">
@@ -323,7 +346,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
     </div>
     </div>
@@ -464,5 +486,91 @@
                 box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
             }
         </style>
+    @endpush
+    @push('scripts')
+        <script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}", "Sukses", {
+            positionClass: "toast-top-right",
+            timeOut: 5000
+        });
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}", "Gagal", {
+            positionClass: "toast-top-right",
+            timeOut: 5000
+        });
+    @endif
+
+    @if(session('warning'))
+        toastr.warning("{{ session('warning') }}", "Peringatan", {
+            positionClass: "toast-top-right",
+            timeOut: 5000
+        });
+    @endif
+</script>
+    @endpush
+    @push('scripts')
+
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const popup = document.createElement('div');
+        popup.classList.add('toast', 'fade', 'show');
+        popup.setAttribute('role', 'alert');
+        popup.setAttribute('aria-live', 'assertive');
+        popup.setAttribute('aria-atomic', 'true');
+        popup.innerHTML = `
+            <div class="toast-header">
+                <strong class="me-auto">Pemberitahuan</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <span style="color: red;">Stok Anda hampir habis!</span>
+                <button id="viewStockBtn" class="btn btn-link p-0 ms-2" style="color: #007bff; cursor: pointer;">
+                    <i class="bi bi-eye"></i> Lihat Stok
+                </button>
+                <div id="stokListContainer" class="mt-3" style="display: none;"></div>
+                <div class="text-center mt-3">
+                    <button id="okBtn" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        popup.style.position = 'fixed';
+        popup.style.top = '20px';
+        popup.style.right = '20px';
+        popup.style.zIndex = '1050';
+        popup.style.backgroundColor = '#ffffff';
+        popup.style.color = '#333';
+        popup.style.border = '1px solid #ced4da';
+        popup.style.borderRadius = '0.375rem';
+        popup.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+
+        popup.classList.add('animate__animated', 'animate__fadeIn');
+
+        document.getElementById('okBtn').addEventListener('click', function() {
+            popup.classList.remove('show');
+            setTimeout(function() {
+                popup.remove();
+            }, 500);
+        });
+  const stokMenipis = @json($stokMenipis);
+        document.getElementById('viewStockBtn').addEventListener('click', function() {
+            const stokList = stokMenipis.map(item =>
+                `- ${item.pembelian?.nama ?? 'Nama tidak ditemukan'}: ${item.stok} unit`
+            ).join('<br>');
+
+            const stokContainer = document.getElementById('stokListContainer');
+            stokContainer.innerHTML = stokList;
+            stokContainer.style.display = 'block';
+        });
+    });
+</script>
+
+
+
     @endpush
 @endsection

@@ -28,7 +28,7 @@
                  <li class="menu-title">Menu</li>
 
                  <li>
-                     <a href="{{ route('home') }}" class="tp-link"><i data-feather="home"></i><span> Dashboard
+                     <a href="{{ route('home') }}" class="tp-link"><i data-feather="home"></i><span> Dasbor
                          </span></a>
                  </li>
                  <li>
@@ -62,7 +62,7 @@
                  <li>
                      <a href="#sidebarAuth" data-bs-toggle="collapse">
                          <i data-feather="file-text"></i>
-                         <span> Note </span>
+                         <span> Catatan </span>
                          <span class="menu-arrow"></span>
                      </a>
                      <div class="collapse" id="sidebarAuth">

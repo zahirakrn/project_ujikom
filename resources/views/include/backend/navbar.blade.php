@@ -83,12 +83,12 @@
     </a>
     <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
         <div class="dropdown-header noti-title">
-            <h6 class="text-overflow m-0">Welcome !</h6>
+            <h6 class="text-overflow m-0">Selamat Datang !</h6>
         </div>
 
         <a href="{{ route('profile.index') }}" class="dropdown-item notify-item">
             <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
-            <span>My Account</span>
+            <span>Akun Saya</span>
         </a>
         <div class="dropdown-divider"></div>
 

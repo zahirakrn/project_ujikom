@@ -71,9 +71,16 @@ class HomeController extends Controller
         $bulanTransaksi[] = Carbon::create()->month($i)->format('F');
         $jumlahTransaksi[] = $dataTransaksi[$i] ?? 0;
     }
+    $stokMenipis = Barang::with('pembelian')
+    ->where('stok', '<=', 50)
+    ->get();
 
-//     $stokMenipisCount = Barang::where('stok', '<=', 50)->count();
+    // $stokMenipis = Barang::where('stok', '<=', 50)->select('nama','stok')->get();
 // $barang           = Barang::all(); // Atau bisa disesuaikan dengan data yang ingin ditampilkan
+    // return redirect()->route('home')->with('success', 'Selamat datang kembali, Jira!');
+
+
+
 
     return view('home', compact(
         'kategori',
@@ -85,8 +92,14 @@ class HomeController extends Controller
         'jumlah',
         'bulanTransaksi',
         'jumlahTransaksi',
-        // 'stokMenipisCount',
+        'stokMenipis',
+
     ));
+    return redirect()->route('home')->with('success', 'Login berhasil!');
+    if ($item->stok <= 50) {
+    session()->flash('warning', 'Stok barang ' . $item->pembelian->nama . ' menipis!');
+}
+
 }
  public function profile()
     {

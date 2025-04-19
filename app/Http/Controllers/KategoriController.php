@@ -13,7 +13,8 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        $kategori = Kategori::all();  // Mengambil semua data kategori
+        $kategori = Kategori::all();
+        
         return view('admin.kategori.index', compact('kategori'));
     }
 
@@ -85,8 +86,11 @@ class KategoriController extends Controller
     public function destroy($id)
     {
         $kategori = Kategori::findOrFail($id);
-        $kategori->delete();
+        if ($kategori->barang()->count() > 0) {
+            return redirect()->route('kategori.index')->with('error', 'kategori tidak bisa dihapus karena terdapat barang di kategori ini');
+        }
 
+        $kategori->delete();
         Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
         return redirect()->route('kategori.index');
 

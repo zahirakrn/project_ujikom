@@ -27,6 +27,39 @@
                                 <a href="{{ route('kategori.create') }}" class="btn btn-outline-primary">+ Tambah Data</a>
                             </div>
 
+                            @if (session('error'))
+                                <div class="bs-toast toast toast-placement-ex m-2 bg-light border border-danger text-danger top-0 end-0 fade show toast-custom"
+                                    role="alert" aria-live="assertive" aria-atomic="true" id="toastError">
+                                    <div class="toast-header bg-danger text-white">
+                                        <i class="bx bx-error me-2"></i>
+                                        <div class="me-auto fw-semibold">Error</div>
+                                        <small>Baru saja</small>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        {{ session('error') }}
+                                    </div>
+                                </div>
+                            @endif
+
+
+                            @if (session('success'))
+                                <div class="bs-toast toast toast-placement-ex m-2 bg-success top-0 end-0 fade show toast-custom"
+                                    role="alert" aria-live="assertive" aria-atomic="true" id="toastSuccess">
+                                    <div class="toast-header">
+                                        <i class="bx bx-check me-2"></i>
+                                        <div class="me-auto fw-semibold">Success</div>
+                                        <small>Baru saja</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        {{ session('success') }}
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="card-body">
                                 <table class="table table-striped table-bordered" id="example">
                                     <thead>
@@ -50,7 +83,7 @@
                                                             <i class="mdi mdi-pencil-outline fs-14 text-primary"></i></a>
 
                                                         <!-- Form untuk Delete -->
-                                                         <form action="{{ route('kategori.destroy', $data->id) }}"
+                                                        <form action="{{ route('kategori.destroy', $data->id) }}"
                                                             method="POST" class="delete-form">
                                                             @csrf
                                                             @method('DELETE')
@@ -71,7 +104,7 @@
                                                                     let itemId = this.getAttribute('data-id'); // Ambil ID item
 
                                                                     Swal.fire({
-                                                                         title: "Hapus Data!",
+                                                                        title: "Hapus Data!",
                                                                         text: "Apakah Anda Yakin?",
                                                                         icon: "warning",
                                                                         showCancelButton: true,
@@ -114,7 +147,10 @@
         $(document).ready(function() {
             $('#example').DataTable({
                 "paging": true, // Aktifkan Pagination
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], // Show entries
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ], // Show entries
                 "searching": true, // Aktifkan Search Box
                 "ordering": true, // Sorting Aktif
                 "info": true, // Show Info Text

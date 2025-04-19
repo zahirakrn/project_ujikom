@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\CatatanStok;
 use App\Models\Pembelian;
 use App\Models\Penggajian;
+use Illuminate\Http\Request;
 use PDF;
 
 class LaporanController extends Controller
