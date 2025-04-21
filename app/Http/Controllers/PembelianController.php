@@ -16,7 +16,7 @@ class PembelianController extends Controller
      */
     public function index()
     {
-        $pembelian = Pembelian::all();  // Mengambil semua data kategori
+        $pembelian = Pembelian::all(); // Mengambil semua data kategori
         return view('admin.pembelian.index', compact('pembelian'));
     }
 
@@ -44,18 +44,16 @@ class PembelianController extends Controller
 
         $tanggal = Carbon::parse($request->tanggal)->format('d F Y');
 
-
         $pembelian = new Pembelian();
         $pembelian->nama_perusahaan = $request->nama_perusahaan;
-        $pembelian->nama= $request->nama;
+        $pembelian->nama = $request->nama;
         $pembelian->jumlah = $request->jumlah;
         $pembelian->harga_beli = $request->harga_beli;
         $pembelian->tanggal = $request->tanggal;
-        $pembelian->alamat= $request->alamat;
+        $pembelian->alamat = $request->alamat;
         $pembelian->save();
 
-
-        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+        Alert::toast('Data Berhasil Ditambahkan', 'success')->position('top-end')->autoClose(3000);
         return redirect()->route('pembelian.index');
     }
     /**
@@ -91,17 +89,16 @@ class PembelianController extends Controller
 
         $tanggal = Carbon::parse($request->tanggal)->format('d F Y');
 
-
         $pembelian = Pembelian::findOrFail($id);
         $pembelian->nama_perusahaan = $request->nama_perusahaan;
-        $pembelian->nama= $request->nama;
+        $pembelian->nama = $request->nama;
         $pembelian->jumlah = $request->jumlah;
         $pembelian->harga_beli = $request->harga_beli;
         $pembelian->tanggal = $request->tanggal;
-        $pembelian->alamat= $request->alamat;
+        $pembelian->alamat = $request->alamat;
         $pembelian->save();
 
-        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        Alert::toast('Data Berhasil Diubah', 'success')->position('top-end')->autoClose(3000)->background('#3498db');
         return redirect()->route('pembelian.index');
     }
 
@@ -113,7 +110,7 @@ class PembelianController extends Controller
         $pembelian = Pembelian::findOrFail($id);
         $pembelian->delete();
 
-        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::toast('Data Berhasil Dihapus', 'success')->position('top-end')->autoClose(3000)->background('#e74c3c');
         return redirect()->route('pembelian.index');
     }
 }

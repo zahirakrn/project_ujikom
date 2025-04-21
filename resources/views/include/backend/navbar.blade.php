@@ -1,13 +1,13 @@
 <style>
     .user-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: #f1f3fa;
-    color: #6c757d;
-}
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #f1f3fa;
+        color: #6c757d;
+    }
 </style>
 
 <div class="topbar-custom">
@@ -73,36 +73,36 @@
 
                 <!-- Profile -->
                 <li class="dropdown notification-list topbar-dropdown">
-    <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#"
-        role="button" aria-haspopup="false" aria-expanded="false">
-        <span class="user-icon rounded-circle">
-            <i class="mdi mdi-account fs-18"></i>
-        </span>
-        <span class="pro-user-name ms-1"> {{ Auth::user()->name }} <i
-                class="mdi mdi-chevron-down"></i></span>
-    </a>
-    <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
-        <div class="dropdown-header noti-title">
-            <h6 class="text-overflow m-0">Selamat Datang !</h6>
-        </div>
+                    <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#"
+                        role="button" aria-haspopup="false" aria-expanded="false">
+                        <span class="user-icon rounded-circle">
+                            <i class="mdi mdi-account fs-18"></i>
+                        </span>
+                        <span class="pro-user-name ms-1"> {{ Auth::user()->name }} <i
+                                class="mdi mdi-chevron-down"></i></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
+                        <div class="dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Selamat Datang !</h6>
+                        </div>
 
-        <a href="{{ route('profile.index') }}" class="dropdown-item notify-item">
-            <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
-            <span>Akun Saya</span>
-        </a>
-        <div class="dropdown-divider"></div>
+                        <a href="{{ route('profile.index') }}" class="dropdown-item notify-item">
+                            <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
+                            <span>Akun Saya</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
 
-        <a class="dropdown-item" href="{{ route('logout') }}"
-            onclick="event.preventDefault();
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
             document.getElementById('logout-form').submit();">
-            {{ __('Logout') }}
-        </a>
+                            {{ __('Logout') }}
+                        </a>
 
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
-    </div>
-</li>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
+                </li>
 
             </ul>
         </div>

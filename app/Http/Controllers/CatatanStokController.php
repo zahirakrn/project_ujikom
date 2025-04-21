@@ -71,21 +71,21 @@ public function store(Request $request)
     // Ambil data barang terkait
     $barang = Barang::findOrFail($request->id_barang);
 
-    if ($request->jenis == 'barang masuk') {
-        $barang->stok += $request->jumlah;  // Tambah stok
-    } elseif ($request->jenis == 'barang keluar') {
-        // Pastikan stok cukup untuk transaksi barang keluar
-        if ($barang->stok >= $request->jumlah) {
-            $barang->stok -= $request->jumlah;  // Kurangi stok
-        } else {
-            return redirect()->back()->with('error', 'Stok tidak mencukupi untuk barang keluar!');
-        }
-    }
+    // if ($request->jenis == 'barang masuk') {
+    //     $barang->stok += $request->jumlah;  // Tambah stok
+    // } elseif ($request->jenis == 'barang keluar') {
+    //     // Pastikan stok cukup untuk transaksi barang keluar
+    //     if ($barang->stok >= $request->jumlah) {
+    //         $barang->stok -= $request->jumlah;  // Kurangi stok
+    //     } else {
+    //         return redirect()->back()->with('error', 'Stok tidak mencukupi untuk barang keluar!');
+    //     }
+    // }
 
     // Simpan perubahan stok
     $barang->save();
 
-    Alert::success('Success', 'Data Berhasil Ditambahkan')->autoClose(1000);
+    Alert::toast('Data Berhasil Ditambahkan', 'success')->position('top-end')->autoClose(3000);
     return redirect()->route('catatanstok.index');
 }
 
@@ -128,22 +128,22 @@ public function store(Request $request)
     $catatanStok = CatatanStok::findOrFail($id);
     $barang = Barang::findOrFail($request->id_barang);
 
-    // Kembalikan stok lama sebelum update
-    if ($catatanStok->jenis == 'pembelian') {
-        $barang->stok -= $catatanStok->jumlah;
-    } elseif ($catatanStok->jenis == 'penjualan') {
-        $barang->stok += $catatanStok->jumlah;
-    }
+    // // Kembalikan stok lama sebelum update
+    // if ($catatanStok->jenis == 'pembelian') {
+    //     $barang->stok -= $catatanStok->jumlah;
+    // } elseif ($catatanStok->jenis == 'penjualan') {
+    //     $barang->stok += $catatanStok->jumlah;
+    // }
 
-    // Update dengan stok baru berdasarkan jenis yang dipilih
-    if ($request->jenis == 'barangmasuk') {
-        $barang->stok += $request->jumlah;
-    } elseif ($request->jenis == 'barangkeluar') {
-        if ($barang->stok < $request->jumlah) {
-            return redirect()->back()->with('error', 'Stok tidak mencukupi untuk penjualan!');
-        }
-        $barang->stok -= $request->jumlah;
-    }
+    // // Update dengan stok baru berdasarkan jenis yang dipilih
+    // if ($request->jenis == 'barangmasuk') {
+    //     $barang->stok += $request->jumlah;
+    // } elseif ($request->jenis == 'barangkeluar') {
+    //     if ($barang->stok < $request->jumlah) {
+    //         return redirect()->back()->with('error', 'Stok tidak mencukupi untuk penjualan!');
+    //     }
+    //     $barang->stok -= $request->jumlah;
+    // }
 
     $barang->save();
 
@@ -155,7 +155,7 @@ public function store(Request $request)
     $catatanStok->keterangan = $request->keterangan;
     $catatanStok->save();
 
-    Alert::success('Success', 'Data Berhasil Diperbarui')->autoClose(1000);
+   Alert::toast('Data Berhasil Diubah', 'success')->position('top-end')->autoClose(3000)->background('#3498db');
     return redirect()->route('catatanstok.index');
 }
 
@@ -168,7 +168,8 @@ public function store(Request $request)
         $catatanStok= CatatanStok::findOrFail($id);
         $catatanStok->delete();
 
-        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::toast('Data Berhasil Dihapus', 'success')->position('top-end')->autoClose(3000)->background('#e74c3c');
+
         return redirect()->route('catatanstok.index');
     }
 }

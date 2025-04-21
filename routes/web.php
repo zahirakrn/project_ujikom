@@ -23,6 +23,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
 Route::get('/laporan/keuangan/pdf', [LaporanController::class, 'exportKeuanganPdf'])->name('laporan.keuangan.pdf');
+Route::get('/laporan-keuangan', [LaporanController::class, 'showLaporanKeuangan']);
 Route::get('/laporan/catatan-stok/pdf', [LaporanController::class, 'exportCatatanStokPdf'])->name('laporan.catatanstok.pdf');
 // Route::get('/laporan/catatan-stok/excel', [LaporanController::class, 'exportExcel'])->name('laporan.catatanstok.excel');
 Route::get('/generate-kode-barang/{kategoriId}', [BarangController::class, 'generateKodeBarang']);

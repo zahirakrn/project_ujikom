@@ -10,25 +10,47 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    public function generateKodeBarang($kategoriId)
-    {
-        $kategori = Kategori::findOrFail($kategoriId);
-        $count = Barang::where('id_kategori', $kategoriId)->count() + 1;
-        $kodeBarang = strtoupper(substr($kategori->nama, 0, 3)) . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+    // public function generateKodeBarang($kategoriId)
+    // {
+    //     $kategori = Kategori::findOrFail($kategoriId);
+    //     $count = Barang::where('id_kategori', $kategoriId)->count() + 1;
+    //     $kodeBarang = strtoupper(substr($kategori->nama, 0, 3)) . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
 
-        return response()->json(['kode_barang' => $kodeBarang]);
+    //     return response()->json(['kode_barang' => $kodeBarang]);
+    // }
+    public function generateKodeBarang($kategoriId)
+{
+    $kategori = Kategori::findOrFail($kategoriId);
+
+    // Cari barang terakhir berdasarkan kategori, urut dari kode_barang terbesar
+    $lastBarang = Barang::where('id_kategori', $kategoriId)
+        ->orderBy('kode_barang', 'desc')
+        ->first();
+
+    if ($lastBarang) {
+        // Pecah kode barang, ambil angka terakhir
+        $lastNumber = (int) substr($lastBarang->kode_barang, -4); // ambil 4 digit dari belakang
+        $newNumber = $lastNumber + 1;
+    } else {
+        $newNumber = 1; // kalau belum ada barang sama sekali
     }
+
+    // Buat kode baru
+    $kodeBarang = strtoupper(substr(str_replace(' ', '', $kategori->nama), 0, 3)) . '-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+    return response()->json(['kode_barang' => $kodeBarang]);
+}
+
 
     public function getHargaBeli($pembelianId)
     {
         $pembelian = Pembelian::findOrFail($pembelianId);
 
-        // Cari semua pembelian dengan nama yang sama
         $totalStok = Pembelian::where('nama', $pembelian->nama)->sum('jumlah');
 
         return response()->json([
             'harga_beli' => $pembelian->harga_beli,
-            'jumlah' => $totalStok, // Total stok
+            'jumlah' => $totalStok,
         ]);
     }
 
@@ -45,7 +67,6 @@ class BarangController extends Controller
             })
             ->values();
 
-
         return view('admin.barang.index', compact('barang'));
     }
 
@@ -57,9 +78,7 @@ class BarangController extends Controller
         $barang = Barang::all();
         $kategori = Kategori::all();
 
-
         $pembelian = Pembelian::selectRaw('MIN(id) as id, nama')->groupBy('nama')->orderBy('nama')->get();
-
         return view('admin.barang.create', compact('pembelian', 'kategori', 'barang'));
     }
 
@@ -101,7 +120,7 @@ class BarangController extends Controller
                 'stok' => $totalStok,
                 'unit' => $request->unit,
             ]);
-            Alert::success('Success', 'Barang Baru Ditambahkan')->autoClose(1000);
+            Alert::toast('Data Berhasil Ditambahkan', 'success')->position('top-end')->autoClose(3000);
         }
 
         return redirect()->route('barang.index');
@@ -156,7 +175,7 @@ class BarangController extends Controller
             'unit' => $request->unit,
         ]);
 
-        Alert::success('Success', 'Data Barang Diupdate')->autoClose(1000);
+        Alert::toast('Data Berhasil Diubah', 'success')->position('top-end')->autoClose(3000)->background('#3498db');
         return redirect()->route('barang.index');
     }
 
@@ -168,8 +187,7 @@ class BarangController extends Controller
         $barang = Barang::findOrFail($id);
         $barang->delete();
 
-        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::toast('Data Berhasil Dihapus', 'success')->position('top-end')->autoClose(3000)->background('#e74c3c');
         return redirect()->route('barang.index');
     }
-    
 }

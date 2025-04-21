@@ -47,7 +47,7 @@ class HomeController extends Controller
     public function index()
 {
     $kategori = Kategori::count();
-    $barang = Barang::with('pembelian', 'kategori')->latest()->take(5)->get();
+    $barang = Barang::with('pembelian', 'kategori')->latest()->get();
     $barangCount = $barang->count();
     $pembelian = Pembelian::count();
     $transaksi = Transaksi::count();

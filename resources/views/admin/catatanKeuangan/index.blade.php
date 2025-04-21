@@ -14,6 +14,7 @@
                     </div>
                     <div class="text-end">
                         <ol class="breadcrumb m-0 py-0">
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="mdi mdi-home-outline me-1"></i>Dasbor</a></li>
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Tabel</a></li>
                             <li class="breadcrumb-item active"> Catatan Keuangan</li>
                         </ol>
@@ -58,7 +59,6 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Penggajian</h5>
-                            <a href="{{ route('penggajian.create') }}" class="btn btn-outline-primary">+ Tambah Data</a>
                         </div>
                         <div class="card-body">
                             <table class="table table-striped table-bordered" id="penggajian">
@@ -92,7 +92,6 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Pembelian</h5>
-                            <a href="{{ route('pembelian.create') }}" class="btn btn-outline-primary">+ Tambah Data</a>
                         </div>
                         <div class="card-body">
                             <table class="table table-striped table-bordered" id="pembelian">

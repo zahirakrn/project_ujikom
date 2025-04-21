@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use App\Models\Penggajian;
 use Illuminate\Http\Request;
 
-
 class PenggajianController extends Controller
 {
     /**
@@ -15,7 +14,7 @@ class PenggajianController extends Controller
      */
     public function index()
     {
-        $penggajian = Penggajian::all();  // Mengambil semua data penggajian
+        $penggajian = Penggajian::all(); // Mengambil semua data penggajian
         return view('admin.penggajian.index', compact('penggajian'));
     }
 
@@ -42,7 +41,6 @@ class PenggajianController extends Controller
 
         $tanggal_gaji = Carbon::parse($request->tanggal_gaji)->format('d F Y');
 
-
         // Simpan data penggajian baru
         $penggajian = new Penggajian();
         $penggajian->nama_pegawai = $request->nama_pegawai;
@@ -53,7 +51,7 @@ class PenggajianController extends Controller
         $penggajian->save();
 
         // Redirect ke halaman index setelah menyimpan
-        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+        Alert::toast('Data Berhasil Ditambahkan', 'success')->position('top-end')->autoClose(3000);
         return redirect()->route('penggajian.index');
     }
 
@@ -90,7 +88,6 @@ class PenggajianController extends Controller
 
         $tanggal_gaji = Carbon::parse($request->tanggal_gaji)->format('d F Y');
 
-
         $penggajian = Penggajian::findOrFail($id);
         $penggajian->nama_pegawai = $request->nama_pegawai;
         $penggajian->jumlah_gaji = $request->jumlah_gaji;
@@ -100,7 +97,7 @@ class PenggajianController extends Controller
         $penggajian->save();
 
         // Redirect ke halaman index setelah update
-        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        Alert::toast('Data Berhasil Diubah', 'success')->position('top-end')->autoClose(3000)->background('#3498db'); 
         return redirect()->route('penggajian.index');
     }
 
@@ -113,7 +110,7 @@ class PenggajianController extends Controller
         $penggajian->delete();
 
         // Redirect ke halaman index setelah menghapus
-        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::toast('Data Berhasil Dihapus', 'success')->position('top-end')->autoClose(3000)->background('#e74c3c');
         return redirect()->route('penggajian.index');
     }
 }

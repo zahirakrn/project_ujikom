@@ -58,7 +58,6 @@ class TransaksiController extends Controller
             }
         }
 
-        // Simpan transaksi utama
         $transaksi = new Transaksi();
         $transaksi->nama = $request->nama;
         $transaksi->tanggal = $request->tanggal;
@@ -66,11 +65,9 @@ class TransaksiController extends Controller
         $transaksi->total = $request->total;
         $transaksi->save();
 
-        // Simpan detail transaksi
         foreach ($request->barang as $key => $barang_id) {
             $barang = Barang::find($barang_id);
 
-            // Simpan detail transaksi ke dalam tabel detail_transaksis
             DB::table('barang_transaksi')->insert([
                 'transaksi_id' => $transaksi->id,
                 'barang_id' => $barang->id,
@@ -80,12 +77,10 @@ class TransaksiController extends Controller
                 'updated_at' => now(),
             ]);
 
-            // Kurangi stok barang
             $barang->stok -= $request->jumlah[$key];
             $barang->save();
         }
-
-        Alert::success('Success', 'Data Berhasil Ditambahkan')->autoClose(1000);
+        Alert::toast('Data Berhasil Ditambahkan', 'success')->position('top-end')->autoClose(3000);
         return redirect()->route('transaksi.index');
     }
 
@@ -94,10 +89,8 @@ class TransaksiController extends Controller
      */
     public function show($id)
     {
-        // Ambil transaksi berdasarkan ID dan relasi barangs
         $transaksi = Transaksi::with('barangs')->findOrFail($id);
 
-        // Kirim data transaksi beserta barang yang terkait
         return view('admin.transaksi.show', compact('transaksi'));
     }
 
@@ -107,7 +100,7 @@ class TransaksiController extends Controller
     public function edit($id)
     {
         $transaksi = Transaksi::with('barangs')->findOrFail($id);
-        $barang = Barang::all(); // Ambil semua barang
+        $barang = Barang::all();
         return view('admin.transaksi.edit', compact('transaksi', 'barang'));
     }
 
@@ -129,10 +122,8 @@ class TransaksiController extends Controller
         $transaksi->total = $request->total;
         $transaksi->save();
 
-        // Hapus detail transaksi lama
         $transaksi->barangs()->detach();
 
-        // Simpan transaksi baru
         foreach ($request->barang as $key => $barang_id) {
             $barang = Barang::find($barang_id);
             $transaksi->barangs()->attach($barang_id, [
@@ -141,7 +132,7 @@ class TransaksiController extends Controller
             ]);
         }
 
-        Alert::success('Success', 'Data Berhasil Diubah')->autoClose(1000);
+        Alert::toast('Data Berhasil Diubah', 'success')->position('top-end')->autoClose(3000)->background('#3498db');
         return redirect()->route('transaksi.index');
     }
 
@@ -151,14 +142,10 @@ class TransaksiController extends Controller
     public function destroy($id)
     {
         $transaksi = Transaksi::findOrFail($id);
-
-        // Hapus detail transaksi di tabel barang_transaksi
         $transaksi->barangs()->detach();
-
-        // Hapus transaksi utama
         $transaksi->delete();
 
-        Alert::success('Success', 'Data Berhasil Dihapus')->autoClose(1000);
+        Alert::toast('Data Berhasil Dihapus', 'success')->position('top-end')->autoClose(3000)->background('#e74c3c');
         return redirect()->route('transaksi.index');
     }
 }

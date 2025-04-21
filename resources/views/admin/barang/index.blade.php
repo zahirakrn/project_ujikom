@@ -13,6 +13,7 @@
                     </div>
                     <div class="text-end">
                         <ol class="breadcrumb m-0 py-0">
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="mdi mdi-home-outline me-1"></i>Dasbor</a></li>
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Tabel</a></li>
                             <li class="breadcrumb-item active">Barang</li>
                         </ol>
@@ -125,7 +126,10 @@
         $(document).ready(function() {
             $('#example').DataTable({
                 "paging": true, // Aktifkan Pagination
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], // Show entries
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ], // Show entries
                 "searching": true, // Aktifkan Search Box
                 "ordering": true, // Sorting Aktif
                 "info": true, // Show Info Text
@@ -137,4 +141,3 @@
         });
     </script>
 @endpush
-

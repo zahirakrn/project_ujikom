@@ -13,6 +13,7 @@
                     </div>
                     <div class="text-end">
                         <ol class="breadcrumb m-0 py-0">
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="mdi mdi-home-outline me-1"></i>Dasbor</a></li>
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Tabel</a></li>
                             <li class="breadcrumb-item active">Penggajian</li>
                         </ol>

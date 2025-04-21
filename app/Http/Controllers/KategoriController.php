@@ -14,7 +14,7 @@ class KategoriController extends Controller
     public function index()
     {
         $kategori = Kategori::all();
-        
+
         return view('admin.kategori.index', compact('kategori'));
     }
 
@@ -37,12 +37,11 @@ class KategoriController extends Controller
 
         // Simpan data kategori baru
         $kategori = new Kategori();
-        $kategori->nama= $request->nama;
+        $kategori->nama = $request->nama;
         $kategori->save();
 
-        Alert::success('Success', 'Data Behasil Ditambahkan')->autoClose(1000);
+        Alert::toast('Data Berhasil Ditambahkan', 'success')->position('top-end')->autoClose(3000);
         return redirect()->route('kategori.index');
-
     }
 
     /**
@@ -71,12 +70,11 @@ class KategoriController extends Controller
             'nama' => 'required',
         ]);
 
-
-        $kategori= Kategori::findOrFail($id);
+        $kategori = Kategori::findOrFail($id);
         $kategori->nama = $request->nama;
         $kategori->save();
 
-        Alert::success('Success', 'Data Behasil Diubah')->autoClose(1000);
+        Alert::toast('Data Berhasil Diubah', 'success')->position('top-end')->autoClose(3000)->background('#3498db'); 
         return redirect()->route('kategori.index');
     }
 
@@ -91,9 +89,7 @@ class KategoriController extends Controller
         }
 
         $kategori->delete();
-        Alert::success('Success', 'Data Behasil DiHapus')->autoClose(1000);
+        Alert::toast('Data Berhasil Dihapus', 'success')->position('top-end')->autoClose(3000)->background('#e74c3c');
         return redirect()->route('kategori.index');
-
-
     }
 }
